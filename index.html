@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Serving the Latin Mass</title>
+<meta name="description" content="Where to kneel, what to carry and what to answer at the Traditional Latin Mass (1962 Missal), step by step, with the rubric or manual behind every instruction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif&text=%E2%84%A3%E2%84%9F&display=swap">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Serving the <span class="r">Latin Mass</span></h1>
+      <p lang="la">ad Deum qui laetificat juventutem meam</p>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#guide">Low Mass</a>
+      <a href="#responses"><span class="glyph" aria-hidden="true">&#8479;</span>Responses</a>
+      <a href="#charts">Charts</a>
+      <a href="#customs">Rubric or custom?</a>
+      <a href="#basics">Basics</a>
+      <a href="#high-mass">High Mass</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#sources">Sources</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="view-guide" class="view" aria-labelledby="guide-h">
+    <header>
+      <span class="eyebrow">Step by step</span>
+      <h2 id="guide-h">Low Mass with one server</h2>
+      <p>The plan is the sanctuary seen from the pews: altar at the top, Gospel side on the left, Epistle side on the right. Red is what you do. Black is what is said.</p>
+    </header>
+
+    <div class="rail-wrap">
+      <div id="rail" class="rail" role="group" aria-label="Every step of the Mass. Tap one to jump to it."></div>
+      <div id="rail-parts" class="rail-parts" aria-hidden="true"></div>
+      <div class="rail-key" aria-hidden="true">
+        <span><i style="background:var(--ink)"></i>you kneel</span>
+        <span><i style="background:var(--ink-soft)"></i>you stand</span>
+        <span><i style="background:var(--rule)"></i>you move</span>
+        <span><i style="background:var(--gold)"></i>you sit</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div id="step-head" class="step-head"></div>
+      <div class="plan-box">
+        <div id="plan" class="plan"></div>
+        <p id="plan-caption" class="plan-caption"></p>
+      </div>
+      <div id="step-text" class="step-text" aria-live="polite"></div>
+    </div>
+
+    <div class="pager">
+      <button type="button" id="prev" class="btn prev">Back</button>
+      <span id="count" class="count"></span>
+      <button type="button" id="next" class="btn primary next">Next</button>
+    </div>
+  </section>
+
+  <section id="view-responses" class="view" aria-labelledby="resp-h" hidden>
+    <header>
+      <span class="eyebrow">What you answer</span>
+      <h2 id="resp-h">The Latin responses</h2>
+      <p>Every line you say at Low Mass, in order. Turn on practice to hide your lines, then tap each one to check yourself.</p>
+    </header>
+    <div class="toggles">
+      <label><input type="checkbox" id="practice"> Practice: hide my lines</label>
+      <label><input type="checkbox" id="english" checked> Show English</label>
+      <button type="button" class="btn" id="reveal-all">Show all</button>
+    </div>
+    <div id="resp" class="resp"></div>
+  </section>
+
+  <section id="view-charts" class="view" aria-labelledby="charts-h" hidden>
+    <header>
+      <span class="eyebrow">The whole Mass at a glance</span>
+      <h2 id="charts-h">Charts</h2>
+    </header>
+
+    <div class="chart-block">
+      <h3>Where everyone is</h3>
+      <p>Time runs down the page; the altar runs across it. Watch the black line: you stay on the side opposite the red one, the missal. Tap a row to open that step.</p>
+      <div class="legend" aria-hidden="true">
+        <span><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--gold)" stroke-width="2.4"/></svg>priest</span>
+        <span><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--red)" stroke-width="2.4"/></svg>missal</span>
+        <span><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--ink)" stroke-width="2.4"/></svg>you</span>
+        <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--ink)"/></svg>kneeling</span>
+        <span><svg width="12" height="12"><circle cx="6" cy="6" r="4.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/></svg>standing</span>
+        <span><svg width="14" height="12"><path d="M1 10 Q1 1 7 1 Q13 1 13 10 Z" fill="var(--gold)"/></svg>bell</span>
+      </div>
+      <div id="chart-crossing" class="chart-scroll"></div>
+    </div>
+
+    <div class="chart-block">
+      <h3>The bells</h3>
+      <p>When the server rings, how many times, and whether the Missal requires it or custom does.</p>
+      <div class="chart-scroll">
+        <table class="grid">
+          <thead><tr><th scope="col">When</th><th scope="col">Rings</th><th scope="col">Authority</th><th scope="col">Notes</th></tr></thead>
+          <tbody id="bells-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="chart-block">
+      <h3>What changes, and when</h3>
+      <p>Parts of Low Mass that drop out in certain seasons and Masses. Your responses drop out with them.</p>
+      <div class="chart-scroll"><table class="grid" id="exceptions"></table></div>
+    </div>
+  </section>
+
+  <section id="view-customs" class="view" aria-labelledby="customs-h" hidden>
+    <header>
+      <span class="eyebrow">Settle the argument</span>
+      <h2 id="customs-h">Rubric or custom?</h2>
+      <p>Some things are written in the 1962 Missal. Others are customs, good ones, that the Missal does not require. Where your church does it differently, follow your priest or master of ceremonies.</p>
+    </header>
+    <div class="legend">
+      <span class="chip auth-rubric">Rubric</span><span>in the 1962 rubrics, or a decree in force with them</span>
+      <span class="chip auth-custom">Custom</span><span>widespread and approved, not in the rubrics</span>
+      <span class="chip auth-manual">Manual</span><span>what the ceremonial manuals direct</span>
+      <span class="chip auth-local">Varies</span><span>differs from church to church</span>
+    </div>
+    <div class="chart-scroll" style="margin-top:14px">
+      <table class="grid">
+        <thead><tr><th scope="col">Practice</th><th scope="col">Status</th><th scope="col">The answer</th></tr></thead>
+        <tbody id="customs-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="view-basics" class="view" aria-labelledby="basics-h" hidden>
+    <header>
+      <span class="eyebrow">Before your first Mass</span>
+      <h2 id="basics-h">Basics</h2>
+    </header>
+    <div id="basics-body" class="prose"></div>
+  </section>
+
+  <section id="view-high-mass" class="view" aria-labelledby="hm-h" hidden>
+    <header>
+      <span class="eyebrow">Missa Cantata and Solemn High Mass</span>
+      <h2 id="hm-h">Roles at a High Mass</h2>
+      <div id="hm-intro" class="prose"></div>
+    </header>
+    <div id="roles" class="cards"></div>
+  </section>
+
+  <section id="view-checklist" class="view" aria-labelledby="chk-h" hidden>
+    <header>
+      <span class="eyebrow">For trainers and new servers</span>
+      <h2 id="chk-h">Ready to serve?</h2>
+      <p>Tick each skill once you can do it without help. Your ticks stay on this device only.</p>
+    </header>
+    <div class="toggles">
+      <span id="check-count"></span>
+      <button type="button" class="btn" id="check-reset">Clear my ticks</button>
+    </div>
+    <div class="progress" aria-hidden="true"><i id="check-bar"></i></div>
+    <div id="checks" class="checks"></div>
+  </section>
+
+  <section id="view-sources" class="view" aria-labelledby="src-h" hidden>
+    <header>
+      <span class="eyebrow">Where every instruction comes from</span>
+      <h2 id="src-h">Sources</h2>
+      <p>The 1962 rubrics first, then the standard ceremonial manuals, then the guides of the communities that celebrate this Mass today.</p>
+    </header>
+    <ol id="biblio" class="biblio"></ol>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>Written for the 1962 Missal. Practice differs a little from church to church: where your priest or master of ceremonies does it differently, do it his way.</p>
+  </div>
+</footer>
+
+<script src="data/sources.js"></script>
+<script src="data/low-mass.js"></script>
+<script src="data/extras.js"></script>
+<script src="js/plan.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
