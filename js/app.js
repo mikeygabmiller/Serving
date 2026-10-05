@@ -80,9 +80,10 @@
 
   // ---------- views ----------
 
-  var VIEWS = ['guide', 'responses', 'charts', 'customs', 'basics', 'high-mass', 'checklist', 'sources'];
+  var VIEWS = ['guide', 'sheets', 'responses', 'charts', 'customs', 'basics', 'high-mass', 'checklist', 'sources'];
 
   function showView(name, opts) {
+    opts = opts || {};
     if (VIEWS.indexOf(name) < 0) name = 'guide';
     VIEWS.forEach(function (v) {
       var sec = document.getElementById('view-' + v);
@@ -92,16 +93,30 @@
       if (a.getAttribute('href') === '#' + name) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
+    document.body.classList.toggle('on-sheets', name === 'sheets');
+    if (name === 'guide' && g) refreshGuide();
     if (name === 'charts') Charts.render();
-    if (!(opts && opts.keepScroll)) window.scrollTo(0, 0);
+    if (name === 'sheets' && !opts.sheet) Sheets.show();
+    if (!opts.keepScroll) window.scrollTo(0, 0);
   }
 
+  // #s-<step> is a step of Low Mass with one server (the first links ever
+  // made); #s-<form>.<position>.<step> is a step of any other form.
+  // #sheets:<form>:<position> opens the sheet maker on that position.
   function route() {
     var h = (location.hash || '').slice(1);
+    try { h = decodeURIComponent(h); } catch (e) { /* keep it as it is */ }
     if (h.indexOf('s-') === 0) {
-      var i = indexOfStep(h.slice(2));
+      var bits = h.slice(2).split('.');
       showView('guide');
-      if (i >= 0) goStep(i, { noHash: true });
+      if (bits.length === 3 && Forms.has(bits[0])) openGuide(bits[0], bits[1], bits[2]);
+      else openGuide('low1', 'server', bits[0]);
+      return;
+    }
+    if (h.indexOf('sheets:') === 0) {
+      var p = h.split(':');
+      showView('sheets', { sheet: true });
+      Sheets.show(p[1], p[2]);
       return;
     }
     if (h.indexOf('src-') === 0) {
@@ -113,25 +128,92 @@
     showView(h || 'guide');
   }
 
+  // ---------- the guide: any form of Mass, any position ----------
+
+  var plan, cur = 0, g = null; // g: { form, role, o, steps }
+
   function indexOfStep(id) {
-    for (var i = 0; i < steps.length; i++) if (steps[i].id === id) return i;
+    for (var i = 0; i < g.steps.length; i++) if (g.steps[i].id === id) return i;
     return -1;
   }
+  function hashFor(st) { return '#s-' + (g.form.key === 'low1' ? st.id : g.form.key + '.' + g.role + '.' + st.id); }
+  function stepStore() { return g.form.key === 'low1' ? 'step' : 'step.' + g.form.key + '.' + g.role; }
 
-  // ---------- the guide ----------
+  function openGuide(formKey, roleKey, stepId, quiet) {
+    var form = Forms.get(formKey);
+    var role = form.roleByKey[roleKey] ? roleKey : form.roles[0].key;
+    if (!g || g.form !== form || g.role !== role) {
+      var o = Forms.opts(form);
+      g = { form: form, role: role, o: o, steps: Forms.stepsFor(form, role, o) };
+      store('guide', { form: form.key, role: role });
+      fillPicker();
+      buildRail();
+    }
+    var id = stepId || store(stepStore());
+    var i = id ? indexOfStep(id) : 0;
+    goStep(i < 0 ? 0 : i, { noHash: !!stepId || quiet });
+  }
 
-  var plan, cur = 0;
+  // Your church's options are shared with the sheet maker: pick up a change
+  // made there when you come back to the guide.
+  function refreshGuide() {
+    var o = Forms.opts(g.form);
+    if (JSON.stringify(o) === JSON.stringify(g.o)) return;
+    var id = g.steps[cur] && g.steps[cur].id;
+    g.o = o;
+    g.steps = Forms.stepsFor(g.form, g.role, o);
+    fillPicker();
+    buildRail();
+    var i = indexOfStep(id);
+    goStep(i < 0 ? Math.min(cur, g.steps.length - 1) : i, { noHash: true });
+  }
+
+  function fillPicker() {
+    var form = g.form;
+    $('#g-form').innerHTML = Forms.all.map(function (f) {
+      return '<option value="' + f.key + '"' + (f === form ? ' selected' : '') + '>' + esc(f.name) + '</option>';
+    }).join('');
+    $('#g-role').innerHTML = form.roles.map(function (r) {
+      return '<option value="' + r.key + '"' + (r.key === g.role ? ' selected' : '') + '>' + esc(r.name) + '</option>';
+    }).join('');
+    $('#g-role').disabled = form.roles.length < 2;
+    $('#g-opts').innerHTML = (form.options || []).map(function (k) {
+      var op = Forms.OPTIONS[k];
+      return '<label><input type="checkbox" data-opt="' + k + '"' + (g.o[k] ? ' checked' : '') + '><span>' + esc(op.label) +
+        (op.note ? '<small>' + rich(op.note) + '</small>' : '') + '</span></label>';
+    }).join('');
+    var role = form.roleByKey[g.role];
+    $('#guide-h').textContent = form.name + (form.roles.length > 1 ? ': ' + role.name : '');
+    $('#guide-intro').innerHTML = form.intro ? rich(form.intro) : '';
+  }
+
+  function wirePicker() {
+    $('#g-form').addEventListener('change', function (e) { openGuide(e.target.value, null); });
+    $('#g-role').addEventListener('change', function (e) { openGuide(g.form.key, e.target.value); });
+    $('#g-opts').addEventListener('change', function (e) {
+      var k = e.target.getAttribute('data-opt');
+      if (!k) return;
+      var id = g.steps[cur] && g.steps[cur].id;
+      g.o[k] = e.target.checked;
+      Forms.saveOpts(g.form, g.o);
+      g.steps = Forms.stepsFor(g.form, g.role, g.o);
+      buildRail();
+      var i = indexOfStep(id);
+      goStep(i < 0 ? Math.min(cur, g.steps.length - 1) : i);
+    });
+    $('#g-sheet').addEventListener('click', function (e) {
+      e.preventDefault();
+      location.hash = '#sheets:' + g.form.key + ':' + g.role;
+    });
+  }
 
   function buildRail() {
     var rail = $('#rail');
+    var steps = g.steps;
     rail.innerHTML = steps.map(function (st, i) {
-      var p = (st.server && st.server.posture) || 'move';
+      var p = Forms.view(g.form, g.role, st, g.o).posture || 'move';
       return '<button type="button" class="p-' + p + '" data-i="' + i + '" aria-label="Step ' + (i + 1) + ': ' + esc(st.title) + '" title="' + esc(st.short || st.title) + '"></button>';
     }).join('');
-    rail.addEventListener('click', function (e) {
-      var b = e.target.closest('button[data-i]');
-      if (b) goStep(+b.getAttribute('data-i'));
-    });
     // part labels, sized by how many steps each part has
     var counts = [];
     steps.forEach(function (st) {
@@ -147,42 +229,32 @@
     }).join('');
   }
 
-  function scene(st) {
-    var marks = (st.marks || []).slice();
-    if (st.bell && st.server && st.server.at) marks.push({ kind: 'bell', at: st.server.at, dx: st.bell.dx || 0, dy: st.bell.dy || -22 });
-    return {
-      priest: st.priest,
-      server: st.server && { at: st.server.at, posture: st.server.posture, tag: st.server.tag || (POSTURE[st.server.posture] || {}).tag, tagSide: st.server.tagSide },
-      server2: st.server2,
-      missal: st.missal,
-      routes: st.routes,
-      marks: marks
-    };
-  }
-
   function goStep(i, opts) {
     opts = opts || {};
+    var steps = g.steps;
     cur = Math.max(0, Math.min(steps.length - 1, i));
     var st = steps[cur];
-    plan.pose(scene(st));
-    $('#plan-caption').textContent = plan.describe(scene(st));
+    var v = Forms.view(g.form, g.role, st, g.o);
+    plan.pose(v.scene);
+    $('#plan-caption').textContent = plan.describe(v.scene);
 
     var part = partsByKey[st.part];
     var chips = [];
-    if (st.server && st.server.posture && POSTURE[st.server.posture]) chips.push(chip('posture', POSTURE[st.server.posture].label));
-    if (st.auth) chips.push(authChip(st.auth));
-    if (st.bell) chips.push(chip('bell', 'Bell' + (st.bell.rings ? ': ' + st.bell.rings : ''), 'Ring the bell'));
-    if (st.bell && st.bell.auth && st.bell.auth !== st.auth) chips.push(authChip(st.bell.auth));
+    if (v.posture && POSTURE[v.posture]) chips.push(chip('posture', POSTURE[v.posture].label));
+    if (v.auth) chips.push(authChip(v.auth));
+    if (v.bell) chips.push(chip('bell', 'Bell' + (v.bell.rings ? ': ' + v.bell.rings : ''), 'Ring the bell'));
+    if (v.bell && v.bell.auth && v.bell.auth !== v.auth) chips.push(authChip(v.bell.auth));
 
     $('#step-head').innerHTML = '<span class="eyebrow">' + esc(part.name) + '</span>' +
-      '<h3 id="step-title" tabindex="-1">' + rich(st.title) + '</h3>' +
+      '<h3 id="step-title" tabindex="-1">' + rich(v.title) + '</h3>' +
       (st.latin ? '<span class="latin" lang="la">' + esc(st.latin) + '</span>' : '') +
       (chips.length ? '<div class="chips" style="margin-top:6px">' + chips.join('') + '</div>' : '');
     var html = '';
-    if (st.do && st.do.length) html += '<div class="do"><ol>' + st.do.map(function (d) { return '<li><span>' + rich(d) + '</span></li>'; }).join('') + '</ol></div>';
-    if (st.say && st.say.length) html += '<div class="say">' + st.say.map(lineHtml).join('') + '</div>';
-    if (st.notes && st.notes.length) html += '<div class="note">' + st.notes.map(function (n) { return '<p>' + rich(n) + '</p>'; }).join('') + '</div>';
-    html += citeHtml(st.cite);
+    if (v.do.length) html += '<div class="do"><ol>' + v.do.map(function (d) { return '<li><span>' + rich(d) + '</span></li>'; }).join('') + '</ol></div>';
+    if (v.say.length) html += '<div class="say">' + v.say.map(lineHtml).join('') + '</div>';
+    if (v.notes.length) html += '<div class="note">' + v.notes.map(function (n) { return '<p>' + rich(n) + '</p>'; }).join('') + '</div>';
+    if (v.bell && v.bell.note) html += '<div class="note"><p><strong>Bell:</strong> ' + rich(v.bell.note) + '</p>' + citeHtml(v.bell.cite) + '</div>';
+    html += citeHtml(v.cite);
     $('#step-text').innerHTML = html;
 
     $('#count').textContent = (cur + 1) + ' of ' + steps.length;
@@ -192,16 +264,20 @@
       if (j === cur) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
     });
 
-    store('step', st.id);
-    if (!opts.noHash && location.hash !== '#s-' + st.id) {
-      try { history.replaceState(null, '', '#s-' + st.id); } catch (e) { /* some embedded viewers refuse; the step still shows */ }
+    store(stepStore(), st.id);
+    if (!opts.noHash && location.hash !== hashFor(st)) {
+      try { history.replaceState(null, '', hashFor(st)); } catch (e) { /* some embedded viewers refuse; the step still shows */ }
     }
     if (opts.focus) $('#step-title').focus({ preventScroll: true });
   }
 
   function initGuide() {
     plan = window.Plan($('#plan'), { idPrefix: 'guide' });
-    buildRail();
+    wirePicker();
+    $('#rail').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-i]');
+      if (b) goStep(+b.getAttribute('data-i'));
+    });
     $('#prev').addEventListener('click', function () { goStep(cur - 1, { focus: true }); });
     $('#next').addEventListener('click', function () { goStep(cur + 1, { focus: true }); });
     document.addEventListener('keydown', function (e) {
@@ -210,9 +286,9 @@
       if (e.key === 'ArrowRight') { goStep(cur + 1); e.preventDefault(); }
       if (e.key === 'ArrowLeft') { goStep(cur - 1); e.preventDefault(); }
     });
-    var saved = store('step');
-    var i = saved ? indexOfStep(saved) : 0;
-    goStep(i < 0 ? 0 : i, { noHash: true });
+    var last = store('guide') || {};
+    var h = location.hash || '';
+    if (h.indexOf('#s-') !== 0) openGuide(last.form || 'low1', last.role, null, true);
   }
 
   // ---------- responses ----------
@@ -349,7 +425,8 @@
 
   window.Serving = {
     steps: steps, partsByKey: partsByKey, sourcesByKey: sourcesByKey, POSTURE: POSTURE, AUTH: AUTH,
-    rich: rich, esc: esc, citeHtml: citeHtml, authChip: authChip, goToStep: function (id) { location.hash = '#s-' + id; }
+    rich: rich, esc: esc, citeHtml: citeHtml, authChip: authChip, lineHtml: lineHtml,
+    goToStep: function (id) { location.hash = '#s-' + id; }
   };
 
   document.addEventListener('click', function (e) {
