@@ -1,0 +1,33 @@
+{
+  "inputs": [
+    "css/site.css",
+    "data/extras.js",
+    "data/low-mass-two.js",
+    "data/low-mass.js",
+    "data/missa-cantata.js",
+    "data/solemn-mass.js",
+    "data/sources.js",
+    "js/app.js",
+    "js/forms.js",
+    "js/plan.js",
+    "js/sheets.js"
+  ],
+  "fingerprint": "0d739c8e2a29c66c6a20702944f144c6b03db4d9bee499d05cba4539eec720fd",
+  "sheets": [
+    "low1-server.pdf",
+    "low2-a1.pdf",
+    "low2-a2.pdf",
+    "cantata-mc.pdf",
+    "cantata-th.pdf",
+    "cantata-ac1.pdf",
+    "cantata-ac2.pdf",
+    "cantata-cr.pdf",
+    "cantata-tb.pdf",
+    "solemn-mc.pdf",
+    "solemn-th.pdf",
+    "solemn-ac1.pdf",
+    "solemn-ac2.pdf",
+    "solemn-cr.pdf",
+    "solemn-tb.pdf"
+  ]
+}

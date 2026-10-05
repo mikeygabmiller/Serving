@@ -11,6 +11,7 @@
   --red-soft: #f5e2e0;   /* red wash behind chips */
   --gold: #8a6104;       /* the priest */
   --gold-soft: #f2e8d0;
+  --other: #7a746b;      /* the other servers on the plan */
   --focus: #1b5fc1;
 
   --font-text: "Alegreya", "Noto Serif", Georgia, "Times New Roman", serif;
@@ -40,6 +41,7 @@
     --red-soft: #3b1e1b;
     --gold: #e0b34e;
     --gold-soft: #33290f;
+    --other: #8f887c;
     --focus: #84b4ff;
     color-scheme: dark;
   }
@@ -55,6 +57,7 @@
   --red-soft: #3b1e1b;
   --gold: #e0b34e;
   --gold-soft: #33290f;
+  --other: #8f887c;
   --focus: #84b4ff;
   color-scheme: dark;
 }
@@ -299,6 +302,43 @@ main { padding-block: 22px 96px; }
 .pager .prev { justify-self: start; }
 
 .toggles { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; margin-bottom: 14px; font-size: var(--s-1); }
+a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+
+/* ---------- choosing a Mass and a position ---------- */
+
+.picker { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; margin-bottom: 12px; }
+.picker .btn { flex: none; }
+.picker.actions { align-items: center; margin-top: 14px; }
+.field { display: grid; gap: 3px; flex: 1 1 14rem; max-width: 24rem; min-width: 0; font-size: var(--s-1); font-weight: 700; color: var(--ink-soft); }
+.field select, .field input {
+  font: inherit; font-size: var(--s0); font-weight: 500; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius);
+  padding: 8px 10px; min-height: 44px; width: 100%;
+}
+.field select:disabled { opacity: 0.7; }
+.field-inline { display: inline-flex !important; gap: 8px; align-items: center !important; }
+.field-inline select { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); padding: 6px 8px; min-height: 40px; }
+.tool-box { border: 1px solid var(--rule); border-radius: var(--radius); padding: 0 12px; margin-bottom: 10px; background: var(--paper); max-width: 52rem; }
+.tool-box > summary { cursor: pointer; padding: 10px 0; font-weight: 700; }
+.tool-box[open] { padding-bottom: 12px; }
+.tool-box .btn { margin-top: 10px; }
+.checks-inline { display: grid; gap: 9px; font-size: var(--s-1); }
+.checks-inline label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+.checks-inline input[type="checkbox"] { accent-color: var(--red); width: 18px; height: 18px; margin: 1px 0 0; flex: none; }
+.checks-inline small { display: block; color: var(--ink-soft); }
+.hint { font-size: var(--s-1); color: var(--ink-soft); margin: 8px 0 0; }
+.sheet-tools { max-width: 52rem; margin-bottom: 18px; }
+#guide-intro { margin: 0; color: var(--ink-soft); }
+#guide-intro:empty { display: none; }
+
+.plan-key { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 0; font-size: var(--s-1); color: var(--ink-soft); }
+.plan-key span { white-space: nowrap; }
+.plan-key i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.plan-key .k-you { background: var(--red); }
+.plan-key .k-clergy { background: var(--gold); }
+.plan-key .k-other { background: var(--other); }
+.plan-key .k-path { width: 18px; height: 0; border-radius: 0; border-top: 2px dashed var(--red); vertical-align: 3px; }
+.plan-key .k-gen { width: 8px; height: 8px; border-radius: 0; border: 1.5px solid var(--ink); transform: rotate(45deg); margin-left: 2px; }
 .toggles label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
 .toggles input { accent-color: var(--red); width: 18px; height: 18px; }
 
@@ -317,22 +357,29 @@ main { padding-block: 22px 96px; }
 .pl-label.side { font-weight: 700; }
 .pl-small { fill: var(--ink-soft); font-family: var(--font-ui); font-size: 10px; }
 
+/* Figures: you are red, the priest, deacon and subdeacon gold, the other servers grey. */
 .fig { transition: transform 520ms cubic-bezier(.4, .1, .2, 1), opacity 300ms; }
-.fig-priest circle { fill: var(--gold); }
-.fig-priest .facing { fill: var(--gold); }
-.fig-server circle { fill: var(--ink); stroke: var(--paper); stroke-width: 2; }
-.fig text.letter { fill: var(--paper); font-family: var(--font-ui); font-weight: 700; font-size: 12px; text-anchor: middle; dominant-baseline: central; }
+.fig circle.body { fill: var(--ink); stroke: var(--paper); stroke-width: 1.6; }
+.fig .facing { fill: var(--ink); }
+.fig.is-clergy circle.body, .fig.is-clergy .facing { fill: var(--gold); }
+.fig.is-other circle.body, .fig.is-other .facing { fill: var(--other); }
+.fig.is-you circle.body, .fig.is-you .facing { fill: var(--red); }
+.fig .you-ring { fill: none; stroke: var(--red); stroke-width: 1.4; opacity: 0; }
+.fig.is-you .you-ring { opacity: 0.6; }
+.fig text.letter { fill: var(--paper); font-family: var(--font-ui); font-weight: 700; font-size: 12px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
 .fig-missal rect.cover { fill: var(--red); }
 .fig-missal line { stroke: var(--paper); stroke-width: 1.2; }
-.fig .tag-bg { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
-.fig .tag { fill: var(--ink); font-family: var(--font-ui); font-weight: 700; font-size: 11px; dominant-baseline: central; }
-.fig-priest .tag-bg { stroke: var(--gold); }
-.fig-priest .tag { fill: var(--gold); }
+.fig .tag-bg { fill: var(--paper); stroke: var(--red); stroke-width: 1; }
+.fig .tag { fill: var(--red); font-family: var(--font-ui); font-weight: 700; font-size: 11px; dominant-baseline: central; }
+.dragging-on .fig.is-you { cursor: grab; }
+.fig.is-moving { transition: none; cursor: grabbing; }
 
-.route { fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-dasharray: 5 4; }
-.route.missal { stroke: var(--red); }
-.route-head { fill: var(--ink); }
-.route-head.missal { fill: var(--red); }
+/* Your path is red and dashed; solid red when you carry the missal. */
+.route { fill: none; stroke: var(--red); stroke-width: 1.6; stroke-dasharray: 5 4; }
+.route.red { stroke-width: 2.6; stroke-dasharray: none; }
+.route.soft { stroke: var(--other); }
+.route-head { fill: var(--red); }
+.route-head.soft { fill: var(--other); }
 .gen-mark { fill: var(--paper); stroke: var(--ink); stroke-width: 1.4; }
 .gen-text { fill: var(--ink); font-family: var(--font-ui); font-size: 10.5px; font-weight: 700; }
 .bell-mark { fill: var(--gold); }

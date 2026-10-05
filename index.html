@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Serving the Latin Mass</title>
-<meta name="description" content="Where to kneel, what to carry and what to answer at the Traditional Latin Mass (1962 Missal), step by step, with the rubric or manual behind every instruction.">
+<meta name="description" content="Where to kneel, what to carry and what to answer at the Traditional Latin Mass (1962 Missal), step by step for every server at Low Mass and High Mass, with printable position sheets and the source behind every instruction.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,700;1,400&family=Alegreya+Sans:wght@400;500;700&display=swap">
@@ -20,7 +20,8 @@
       <p lang="la">ad Deum qui laetificat juventutem meam</p>
     </div>
     <nav class="tabs" aria-label="Sections">
-      <a href="#guide">Low Mass</a>
+      <a href="#guide">Guide</a>
+      <a href="#sheets">Sheets</a>
       <a href="#responses"><span class="glyph" aria-hidden="true">&#8479;</span>Responses</a>
       <a href="#charts">Charts</a>
       <a href="#customs">Rubric or custom?</a>
@@ -38,8 +39,19 @@
     <header>
       <span class="eyebrow">Step by step</span>
       <h2 id="guide-h">Low Mass with one server</h2>
-      <p>The plan is the sanctuary seen from the pews: altar at the top, Gospel side on the left, Epistle side on the right. Red is what you do. Black is what is said.</p>
+      <p>The plan is the sanctuary seen from the pews: altar at the top, Gospel side on the left, Epistle side on the right. You are the red figure. Red is what you do; black is what is said.</p>
+      <p id="guide-intro"></p>
     </header>
+
+    <div class="picker">
+      <label class="field">Mass <select id="g-form"></select></label>
+      <label class="field">Your position <select id="g-role"></select></label>
+      <a href="#sheets" class="btn" id="g-sheet">Make a printable sheet</a>
+    </div>
+    <details class="tool-box">
+      <summary>How your church does it</summary>
+      <div id="g-opts" class="checks-inline"></div>
+    </details>
 
     <div class="rail-wrap">
       <div id="rail" class="rail" role="group" aria-label="Every step of the Mass. Tap one to jump to it."></div>
@@ -56,6 +68,7 @@
       <div id="step-head" class="step-head"></div>
       <div class="plan-box">
         <div id="plan" class="plan"></div>
+        <p class="plan-key" aria-hidden="true"><span><i class="k-you"></i>you</span><span><i class="k-clergy"></i>priest, deacon, subdeacon</span><span><i class="k-other"></i>other servers</span><span><i class="k-path"></i>where you walk</span><span><i class="k-gen"></i>genuflect</span></p>
         <p id="plan-caption" class="plan-caption"></p>
       </div>
       <div id="step-text" class="step-text" aria-live="polite"></div>
@@ -66,6 +79,55 @@
       <span id="count" class="count"></span>
       <button type="button" id="next" class="btn primary next">Next</button>
     </div>
+  </section>
+
+  <section id="view-sheets" class="view" aria-labelledby="sheets-h" hidden>
+    <header>
+      <span class="eyebrow">Print it and hand it over</span>
+      <h2 id="sheets-h">Position sheets</h2>
+      <p>Pick the Mass and the position. The sheet has every step that position takes part in: the plan, where you stand, and what you do. Change anything to match your church, then print it or download it. Your changes stay on this device.</p>
+    </header>
+    <div class="sheet-tools">
+      <div class="picker">
+        <label class="field">Mass <select id="sh-form"></select></label>
+        <label class="field">Position <select id="sh-role"></select></label>
+      </div>
+      <div class="picker">
+        <label class="field">Your church <input id="sh-church" type="text" autocomplete="off" placeholder="St. Joseph, Anytown"></label>
+        <label class="field">Sheet title <input id="sh-title" type="text" autocomplete="off"></label>
+      </div>
+      <details class="tool-box" open>
+        <summary>How your church does it</summary>
+        <div id="sh-opts" class="checks-inline"></div>
+      </details>
+      <details class="tool-box">
+        <summary>What goes on the sheet</summary>
+        <div class="checks-inline">
+          <label><input type="checkbox" id="sh-say"><span>Latin responses</span></label>
+          <label><input type="checkbox" id="sh-full"><span>The priest's lines in full, with English</span></label>
+          <label><input type="checkbox" id="sh-notes"><span>Notes</span></label>
+          <label><input type="checkbox" id="sh-cites"><span>Sources</span></label>
+          <label><input type="checkbox" id="sh-others"><span>Other servers on the plan</span></label>
+          <label class="field-inline">Layout <select id="sh-layout"><option value="1">Plan beside the words</option><option value="2">Two steps across</option></select></label>
+        </div>
+        <p class="hint">Untick "on the sheet" on any step to leave it off.</p>
+      </details>
+      <details class="tool-box">
+        <summary>Change it to match your church</summary>
+        <div class="checks-inline">
+          <label><input type="checkbox" id="sh-edit"><span>Change the words: tap a line, type, tap away</span></label>
+          <label><input type="checkbox" id="sh-move"><span>Move my figure: drag the red circle</span></label>
+        </div>
+        <button type="button" class="btn" id="sh-reset">Start this sheet again</button>
+      </details>
+      <div class="picker actions">
+        <button type="button" class="btn primary" id="sh-print">Print</button>
+        <button type="button" class="btn" id="sh-download">Download</button>
+        <a class="btn" id="sh-pdf" href="sheets/low1-server.pdf" target="_blank" rel="noopener">Ready-made PDF</a>
+        <span id="sh-count" class="hint"></span>
+      </div>
+    </div>
+    <div id="sheet" class="sheet"></div>
   </section>
 
   <section id="view-responses" class="view" aria-labelledby="resp-h" hidden>
@@ -153,6 +215,7 @@
       <span class="eyebrow">Missa Cantata and Solemn High Mass</span>
       <h2 id="hm-h">Roles at a High Mass</h2>
       <div id="hm-intro" class="prose"></div>
+      <p>Every position step by step: pick it in the <a href="#guide">Guide</a>, or print it from <a href="#sheets">Sheets</a>.</p>
     </header>
     <div id="roles" class="cards"></div>
   </section>
@@ -184,15 +247,20 @@
 
 <footer class="site">
   <div class="wrap">
-    <p>Written for the 1962 Missal. Practice differs a little from church to church: where your priest or master of ceremonies does it differently, do it his way.</p>
+    <p>Written for the 1962 Missal. Practice differs a little from church to church: where your priest or master of ceremonies does it differently, do it that way.</p>
   </div>
 </footer>
 
 <script src="data/sources.js"></script>
 <script src="data/low-mass.js"></script>
 <script src="data/extras.js"></script>
+<script src="data/low-mass-two.js"></script>
+<script src="data/missa-cantata.js"></script>
+<script src="data/solemn-mass.js"></script>
 <script src="js/plan.js"></script>
+<script src="js/forms.js"></script>
 <script src="js/charts.js"></script>
+<script src="js/sheets.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

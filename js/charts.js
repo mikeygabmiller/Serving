@@ -18,11 +18,11 @@
   // Gospel side on the left, Epistle side on the right, as seen from the nave.
   // The server is drawn at the exact place on the plan; the priest and the missal
   // only ever stand at one of three places, so they sit exactly on those columns.
-  var COL = { gospel: 108, middle: 200, epistle: 300, side: 372 };
+  var COL = { gospel: 138, middle: 230, epistle: 330, side: 410 };
   function snap(px) {
-    if (px < 160) return COL.gospel;
-    if (px <= 240) return COL.middle;
-    if (px <= 340) return COL.epistle;
+    if (px < 190) return COL.gospel;
+    if (px <= 270) return COL.middle;
+    if (px <= 370) return COL.epistle;
     return COL.side;
   }
 
@@ -35,7 +35,7 @@
     var labelW = narrow ? 120 : 220;
     var plotW = Math.min(520, avail - labelW - 18 - 40);
     var top = 66, rowH = 27, partH = 26;
-    var x0 = 80, x1 = 400;
+    var x0 = 110, x1 = 460;
     function X(px) { return labelW + 18 + (Math.max(x0, Math.min(x1, px)) - x0) / (x1 - x0) * plotW; }
 
     var rows = [], y = top, last = null;

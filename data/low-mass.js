@@ -42,7 +42,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-foot' },
     server: { at: 's-beside-right', posture: 'stand' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-sacristy', { x: 300, y: 160 }, 's-beside-right'] }],
+    routes: [{ via: ['s-sacristy', { x: 330, y: 160 }, 's-beside-right'] }],
     marks: [{ kind: 'text', at: 's-sacristy', dx: -2, dy: -12, label: 'from the sacristy', anchor: 'end' }],
     do: [
       'Bow with the priest to the cross in the sacristy, then walk in front of him to the altar.',
@@ -67,7 +67,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-foot' },
     server: { at: 's-foot-gospel', posture: 'kneel' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-beside-right', { x: 216, y: 150 }, 's-foot-gospel'], shorten: 14 }],
+    routes: [{ via: ['s-beside-right', { x: 246, y: 150 }, 's-foot-gospel'], shorten: 14 }],
     do: [
       'Come back to the Gospel side of the middle. When the priest comes down to the floor and makes his reverence, kneel behind him, to his left.',
       'Kneel on the floor itself, not on the step.',
@@ -168,7 +168,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-center' },
     server: { at: 's-gospel-step', posture: 'kneel' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-foot-gospel', { x: 120, y: 132 }, 's-gospel-step'] }],
+    routes: [{ via: ['s-foot-gospel', { x: 150, y: 132 }, 's-gospel-step'] }],
     do: [
       'Bow slightly from *Deus, tu convérsus*, and stay bowed until the priest goes up to the altar.',
       'As he goes up, rise. You may lift the front of his alb as he climbs the steps.',
@@ -253,7 +253,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-epistle' },
     server: { at: 's-epistle-floor', posture: 'stand' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-gospel-step', { x: 120, y: 130 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
+    routes: [{ via: ['s-gospel-step', { x: 150, y: 130 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
     do: [
       'At the end of the Epistle answer *Deo grátias*. The priest usually gives a sign: he lays his left hand on the altar, or turns or lifts his hand toward you.',
       'Rise and go along the floor to the Epistle side, genuflecting at the middle. Do not walk across the footpace.',
@@ -319,7 +319,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-gospel' },
     server: { at: 's-epistle-floor', posture: 'stand', tag: 'stands, facing the priest' },
     missal: 'm-gospel',
-    routes: [{ via: ['s-gospel-book', { x: 112, y: 126 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
+    routes: [{ via: ['s-gospel-book', { x: 142, y: 126 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
     do: [
       'Go down, cross to the Epistle side (genuflecting at the middle) and stand on the floor there, turned toward the priest.',
       'If the priest genuflects during the Gospel, genuflect with him.',
@@ -340,7 +340,7 @@ SERVING.lowMass = { steps: [
     skills: ['Answer *Laus tibi, Christe* from the Epistle side']
   },
   {
-    id: 'sermon', part: 'catechumens', short: 'Sermon (if any)',
+    id: 'sermon', opt: 'sermon', part: 'catechumens', short: 'Sermon (if any)',
     title: 'If there is a sermon',
     server: { at: 's-seat', posture: 'sit' },
     missal: 'm-gospel',
@@ -354,7 +354,7 @@ SERVING.lowMass = { steps: [
     cite: [['CR60', 'n. 474'], ['CRSJC'], ['FSSPOM', 'two servers']]
   },
   {
-    id: 'creed', part: 'catechumens', short: 'Creed (if said)',
+    id: 'creed', opt: 'creed', part: 'catechumens', short: 'Creed (if said)',
     title: 'Kneel for the Creed, when it is said',
     latin: 'Credo',
     priest: { at: 'p-center' },
@@ -500,7 +500,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-center' },
     server: { at: 's-consecration', posture: 'kneel' },
     missal: 'm-gospel',
-    routes: [{ via: ['s-epistle-step', { x: 262, y: 92 }, 's-consecration'] }],
+    routes: [{ via: ['s-epistle-step', { x: 292, y: 92 }, 's-consecration'] }],
     bell: {
       rings: '1', auth: 'rubric', dy: -24,
       note: 'New in 1962: "shortly before the Consecration the server warns the faithful with a signal of the bell" (Rit. serv. VIII.6). The moment is not fixed; ringing at the *Hanc ígitur* is the current custom. Before 1960 the Missal had no such bell.',
@@ -530,6 +530,8 @@ SERVING.lowMass = { steps: [
     do: [
       'When the priest raises the Host, lift the back hem of his chasuble a little with your left hand: only while he raises it, not while he genuflects, and not too high.',
       'Ring the bell with your right hand.',
+      { t: 'Ring once as he genuflects, three times as he raises the Host, once as he genuflects again.', if: 'bells131' },
+      { t: 'Ring three times as he raises the Host.', unless: 'bells131' },
       'Bow low while he genuflects.',
       'Do the same when he raises the chalice.'
     ],
@@ -544,7 +546,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-center' },
     server: { at: 's-epistle-step', posture: 'kneel' },
     missal: 'm-gospel',
-    routes: [{ via: ['s-consecration', { x: 222, y: 112 }, 's-center-floor', 's-epistle-step'], genuflect: ['s-center-floor'] }],
+    routes: [{ via: ['s-consecration', { x: 252, y: 112 }, 's-center-floor', 's-epistle-step'], genuflect: ['s-center-floor'] }],
     do: [
       'When the chalice is put down and the priest has genuflected, rise with the bell.',
       'Come down to the floor in the middle, genuflect, and go back to kneel at the Epistle end of the lowest step.'
@@ -616,7 +618,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-center', faces: 'people' },
     server: { at: 's-consecration', posture: 'kneel' },
     missal: 'm-gospel',
-    routes: [{ via: ['s-epistle-step', 's-credence', { x: 300, y: 130 }, 's-center-floor', 's-consecration'], genuflect: ['s-center-floor'] }],
+    routes: [{ via: ['s-epistle-step', 's-credence', { x: 330, y: 130 }, 's-center-floor', 's-consecration'], genuflect: ['s-center-floor'] }],
     bell: {
       rings: 'at least 1', auth: 'rubric', dy: -24,
       note: 'New in 1962: "if any are to receive Communion, shortly before, the server warns them with a signal of the bell" (Rit. serv. X.6). The moment is not fixed. Some churches also ring at each of the people\'s *Dómine, non sum dignus*.',
@@ -625,6 +627,7 @@ SERVING.lowMass = { steps: [
     do: [
       'If anyone is to receive Communion, ring the bell shortly before to tell them. The 1962 rubric asks for this without fixing the moment, so follow your church.',
       'Fetch the paten from the credence, genuflect at the middle, and kneel on the edge of the footpace at the priest\'s right.',
+      { t: 'Your church says the Confiteor here: kneeling, bow low and say it as at the foot of the altar, then answer *Amen* to the priest\'s *Misereátur vestri* and *Indulgéntiam*.', if: 'confiteor' },
       'You receive first. The priest says the whole formula, *Amen* included, so you do not answer.'
     ],
     say: [
@@ -633,7 +636,8 @@ SERVING.lowMass = { steps: [
       { who: 'P', la: 'Corpus Dómini nostri Iesu Christi custódiat ánimam tuam in vitam ætérnam. Amen.', en: 'May the Body of our Lord Jesus Christ keep thy soul unto life everlasting. Amen.' }
     ],
     notes: [
-      '**No Confiteor here in the 1962 rubrics.** The priest goes straight to *Ecce Agnus Dei*, "omitting the confession and absolution" (Code n. 503). Many churches still say it. If yours does, say it as at the foot of the altar and answer *Amen* to the priest\'s *Misereátur vestri* and *Indulgéntiam*. See *Rubric or custom?*',
+      { t: '**No Confiteor here in the 1962 rubrics.** The priest goes straight to *Ecce Agnus Dei*, "omitting the confession and absolution" (Code n. 503). Many churches still say it. If yours does, say it as at the foot of the altar and answer *Amen* to the priest\'s *Misereátur vestri* and *Indulgéntiam*. See *Rubric or custom?*', unless: 'confiteor' },
+      { t: 'The 1962 rubric leaves this Confiteor out (Code n. 503); your church keeps the older custom.', if: 'confiteor' },
       'The server receives first (S.R.C. 1074, in Wuest), and may receive kneeling at the edge of the footpace.',
       'Some guides have you say the *Dómine, non sum dignus* quietly with the priest (Canons Regular).'
     ],
@@ -648,8 +652,8 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-rail', faces: 'people' },
     server: { at: 's-rail', posture: 'stand' },
     missal: 'm-gospel',
-    routes: [{ via: [{ x: 284, y: 209 }, { x: 110, y: 209 }], shorten: 0 }],
-    marks: [{ kind: 'text', at: { x: 196, y: 200 }, label: 'along the rail' }],
+    routes: [{ via: [{ x: 314, y: 219 }, { x: 140, y: 219 }], shorten: 0 }],
+    marks: [{ kind: 'text', at: { x: 226, y: 208 }, label: 'along the rail' }],
     do: [
       'Go down with the priest to the rail. Stand at his right and hold the paten flat under each communicant\'s chin as he gives Communion.',
       'He starts at the Epistle end of the rail (the communicants\' right) and works along it.',
@@ -762,7 +766,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-gospel' },
     server: { at: 's-epistle-floor', posture: 'stand', tag: 'stands, facing the priest' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-gospel-book', { x: 112, y: 126 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
+    routes: [{ via: ['s-gospel-book', { x: 142, y: 126 }, 's-center-floor', 's-epistle-floor'], genuflect: ['s-center-floor'] }],
     do: [
       'Stand at the Gospel side for the opening. Answer, and make the three small crosses with the priest.',
       'Cross to the Epistle side, genuflecting at the middle, and stand turned toward the priest.',
@@ -787,7 +791,7 @@ SERVING.lowMass = { steps: [
     skills: ['Genuflect at *Et Verbum caro factum est*']
   },
   {
-    id: 'leonine', part: 'end', short: 'Leonine prayers',
+    id: 'leonine', opt: 'leonine', part: 'end', short: 'Leonine prayers',
     title: 'Prayers after Low Mass',
     latin: 'Preces post Missam',
     priest: { at: 'p-step', tag: 'kneels', tagSide: 'left' },
@@ -824,7 +828,7 @@ SERVING.lowMass = { steps: [
     priest: { at: 'p-foot' },
     server: { at: 's-beside-right', posture: 'stand' },
     missal: 'm-epistle',
-    routes: [{ via: ['s-beside-right', { x: 300, y: 160 }, 's-sacristy'], shorten: 0 }],
+    routes: [{ via: ['s-beside-right', { x: 330, y: 160 }, 's-sacristy'], shorten: 0 }],
     marks: [{ kind: 'text', at: 's-sacristy', dx: -2, dy: -12, label: 'to the sacristy', anchor: 'end' }],
     do: [
       'Fetch the biretta. When the priest comes down with the chalice, genuflect with him on the floor.',

@@ -259,7 +259,7 @@ SERVING.highMass = {
       summary: 'Two servers with candles who do much of what one server does at Low Mass.',
       duties: [
         'Carry lighted candles in the procession and set them on the credence.',
-        'Stand with their candles on either side of the book at the Gospel. They do not genuflect while holding them.',
+        'Stand with their candles on either side of the book at the Gospel, and do not genuflect during it while holding them (Code n. 519).',
         'Bring the cruets, serve the Lavabo and serve the ablutions.',
         'Light the torches at the end of the Preface.'
       ],

@@ -40,13 +40,40 @@ instruction is worse than a missing one.**
 ## Look and voice
 
 - **Red is what you do, black is what is said.** That's how a missal prints
-  rubrics, and the whole design follows it. The priest is gold, the missal is
-  red, the server is ink.
+  rubrics, and the whole design follows it. On the plan you (the position the
+  page is for) are red, the priest, deacon and subdeacon gold, the other
+  servers grey, and the missal red.
 - **Talk to the server as "you".** Plain words, short sentences, the way an
   experienced server or MC would explain it in the sacristy.
 - **No em dashes** in anything served (the same rule as Mikey's business
   site): use a full stop, comma, colon or brackets. En dashes in ranges are
   fine. The checker enforces it.
+
+## Forms of Mass and positions
+
+- **Four forms:** Low Mass with one server (`data/low-mass.js`), with two
+  (`data/low-mass-two.js`), Missa Cantata (`data/missa-cantata.js`) and Solemn
+  High Mass (`data/solemn-mass.js`). `js/forms.js` puts them into one shape; the
+  guide and the sheet maker only ever read that.
+- **A step names where everyone ends up** (`place`), and each position's part
+  (`mc`, `th`, `ac1`, ...). Every position with a part must be on the drawing.
+  The deacon and subdeacon are drawn only where a source says where they are.
+- **Responses are written once.** Other forms borrow them with
+  `sayFrom: ['<low-mass step id>']`; never copy the Latin.
+- **Parish differences are options** (`OPTIONS` in `js/forms.js`): a line can be
+  `{ t, if: 'option' }` or `{ t, unless: 'option' }`, a step `opt` or `optNot`.
+  Use one where the sources really disagree (say which in a note), not to hide a
+  gap.
+- **FSSP Omaha's line diagrams are drawn as seen from the nave**, like the plan:
+  left is the Gospel side (see `research/positions.md`, Communion).
+
+## Position sheets
+
+- `js/sheets.js` draws them; its styles are in `SHEET_CSS` there, because the
+  same text goes into a downloaded sheet. A sheet is light even in dark mode.
+- **The ready-made PDFs in `sheets/` are made, not written:** after any change
+  to the data, the plan, the forms or the sheet code, run
+  `node tools/make-sheets.cjs`. `tools/check.py` fails until you do.
 
 ## Before you push
 
